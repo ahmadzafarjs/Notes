@@ -1,10 +1,12 @@
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const app = express()
+const port = process.env.PORT || 3000
 
 
-mongoose.connect("mongodb+srv://Ahmad:ahmad336@test.bb05drz.mongodb.net/Notes")
+mongoose.connect(process.env.DB_URL)
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('connected', () => {
@@ -36,7 +38,7 @@ app.post('/', (req, res) => {
 
 })
 // Find All Data
-app.get('/getAll', async (req, res)=> {
+app.get('/api/getAll', async (req, res)=> {
   try {
   const data = await Notes.find()
   res.json(data)
@@ -46,7 +48,7 @@ app.get('/getAll', async (req, res)=> {
 })
 
 // Find by ID
-app.get('/getOne/:id', async (req, res)=> {
+app.get('/api/getOne/:id', async (req, res)=> {
   try{
     const data = await Notes.find({"name": req.params.id});
     res.json(data)
@@ -55,6 +57,6 @@ app.get('/getOne/:id', async (req, res)=> {
   }
 })
 
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log("Server Starts on 3000")
 })
